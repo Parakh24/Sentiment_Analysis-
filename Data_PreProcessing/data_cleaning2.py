@@ -72,8 +72,8 @@ def data_cleaning(content):
 
 
 #Data cleaning 
-df['review'] = df['review'].apply(data_cleaning)  
+df['Reviews'] = df['Reviews'].apply(data_cleaning)  
  
-print(df['review'].head(10))
+
 
     
