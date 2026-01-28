@@ -1,0 +1,35 @@
+# Goal : In this case study , we will focus only on rating , review attribute to develop a sentiment analyzer model to categorize 
+# review either positive or negative 
+
+# 1. Map rating with 1 to 10 to binary classes (positive or negative) 
+#. Try to solve real time challenges related to Sentiment Analyzer : Sarcasm , multi polarity and negation 
+# Develop NLP and ML model to categorize English text reviews either positive or negative 
+# Deploy Sentiment Analyzer model on AWS cloud using rest API 
+
+
+# Map Ratings range to Binary classes: 
+  # 1 to 4: Negative 
+  # 5 to 6: Neutral 
+  # 7 to 10: Positive 
+
+#As we are interested in Positive and Negative reviews only , we will filter out Neutral reviews from the dataset 
+
+
+#Final Outcome : 
+  #1. Sentiment Value for each review either Positive or Negative
+  #2 Movie attribute like by majoriry of users
+  #3 Movie attribute disliked by majority of users  
+
+
+
+# Chalenges while dveloping sentiment analyzer model: 
+  # Sarcasm : some time user provide their negative review by using positive words. Simple Sentiment analysis model can 
+              # easily fool by this kind of sarcasm. SO, we need to design our sentiment analyzer model in such a way that it  
+              # can handle sarcasm also. 
+  
+  #Polarity : Sometime user provide multipolarity review than traditional sentiment analyzer system may not work. So, we need to 
+              # design sentiment analyzer to get valuable information form multipolarity reviews also. 
+
+  # Negation : Some user use non,  less , not , never , cannot to reverse , the polarity of review or word. SO, we need to use state 
+               # of the art ML model to handle this kind of scenarios.  
+
