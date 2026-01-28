@@ -11,11 +11,11 @@ print(df.isna().sum())
 
 
 #this gives you the basic statistical values about the texts such as mean , median , std
-df['review'].describe()
+df['Reviews'].describe()
 
 
 # %s it's a placeholder for a value that will be inserted into the string. 
 #df.review is the review column in my dataframe and .nunique() displays the number of unique values in the review column
-print('Unique reviews:%s' % df.review.nunique())
+print('Unique reviews:%s' % df.Reviews.nunique())
 
  
