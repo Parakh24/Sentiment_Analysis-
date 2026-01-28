@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore')
 
 
 #Loading of Data 
-df = pd.read_csv('IMDB Dataset.csv') 
+df = pd.read_csv('IMDB-Dataset.csv') 
 
 
 
@@ -51,7 +51,7 @@ stop_words.remove('not')
 STOP_WORDS = set(stop_words)   
 
 
-print(df) 
+
 
 
 
