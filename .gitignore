@@ -1,6 +1,4 @@
 __pycache__ 
-<<<<<<< HEAD
- Data_PreProcessing/IMDB-Dataset.csv
-=======
 
->>>>>>> 050280b1b8e3035d23fe347ec0a98704b2d7307b
+ Data_PreProcessing/IMDB-Dataset.csv
+ *.csv
