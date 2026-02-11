@@ -1,3 +1,11 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
+
+
 from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeClassifier
 from Feature_Engineering_Selection.Vectoization import preprocess_data , vectorize_unigram
@@ -8,15 +16,28 @@ from sklearn.metrics import f1_score , precision_score , roc_auc_score
 
 model_2 = Pipeline(
     steps=[
-        ("classifier", DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, class_weight=None, ccp_alpha=0.0)),
-    ("classifier", DecisionTreeClassifier())
+        ("dt", DecisionTreeClassifier(
+            criterion='gini',
+            splitter='best',
+            max_depth=None,
+            min_samples_split=2,
+            min_samples_leaf=1,
+            min_weight_fraction_leaf=0.0,
+            max_features=None,
+            random_state=None,
+            max_leaf_nodes=None,
+            min_impurity_decrease=0.0,
+            class_weight=None,
+            ccp_alpha=0.0
+        ))
     ]
 )
 
 
 
 
-data = preprocess_data(df)
+
+df , data = preprocess_data(df)
 train, test, countvect, tfidfvect, x_train_count, x_test_count, x_train_tfidf, x_test_tfidf, y_train, y_test = vectorize_unigram(data)
     
 
