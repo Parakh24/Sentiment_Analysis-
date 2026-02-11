@@ -1,50 +1,19 @@
 # Importing all dependencies 
 
-import numpy as np 
-import pandas as pd 
-import seaborn as sns 
-import matplotlib.pyplot as plt 
-import plotly.express as px 
-import nltk 
-from sklearn.feature_extraction.text import CountVectorizer 
-<<<<<<< HEAD
-=======
-from wordcloud import WordCloud , STOPWORDS 
-from nltk.stem import WordNetLemmatizer 
-from nltk.tokenize import word_tokenize 
-import re , string , unicodedata 
-from sklearn.metrics import classification_report , confusion_matrix , accuracy_score , f1_score 
-from sklearn.model_selection import train_test_split 
-from string import punctuation  
-from nltk import pos_tag 
-from nltk.corpus import wordnet 
->>>>>>> 050280b1b8e3035d23fe347ec0a98704b2d7307b
+ 
+
 import warnings 
 warnings.filterwarnings('ignore') 
+import os
+import pandas as pd
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(base_dir, "IMDB-Dataset.csv")
+
+df = pd.read_csv(file_path, engine="python", on_bad_lines="skip", encoding="utf-8")
 
 
-
-#Loading of Data 
-<<<<<<< HEAD
-df = pd.read_csv(r'C:\Users\parak\sentimentAnalysis\Data_PreProcessing\IMDB-Dataset.csv') 
-
-
- 
-from nltk.corpus import stopwords           
-
- 
-stop_words = stopwords.words('english')
-
-new_stopwords = ['movie' , 'one' , 'film' , 'would' , 'shall' , 'could' , 'might'] 
-
-  
-stop_words.extend(new_stopwords)  
-
-stop_words.remove('not') 
-
-=======
-df = pd.read_csv('IMDB-Dataset.csv') 
-
+print(df.columns)
 
 
 
@@ -69,7 +38,7 @@ stop_words.extend(new_stopwords)
 stop_words.remove('not') 
 
 #list is converted to sets for faster processing and removing duplicates
->>>>>>> 050280b1b8e3035d23fe347ec0a98704b2d7307b
+
 STOP_WORDS = set(stop_words)   
 
 
