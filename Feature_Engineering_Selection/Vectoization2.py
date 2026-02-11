@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from sklearn.model_selection import train_test_split 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from Data_PreProcessing.data_cleaning import df 
@@ -5,20 +10,18 @@ from nltk.stem import WordNetLemmatizer
 from nltk import word_tokenize  
 from sklearn.linear_model import LogisticRegression 
 from prettytable import PrettyTable 
-import pandas as pd
-
 
 # ===========================
 # Data Preprocessing
 # ===========================
+
 def preprocess_data(df):
     # Map ratings to binary labels
-    df['Label'] = df['Ratings'].apply(lambda x: '1' if x >= 7 else ('0' if x <= 4 else '2'))
-    df = df[df.Label < '2']  # Remove neutral
-    data = df[['Reviews_clean', 'Label']]
+    df['Label'] = df['Ratings'].apply(lambda x: 1 if x >= 4 else (0 if x <= 3 else 2))
+    df = df[df.Label < 2]  # Remove neutral
+    data = df[['Reviews', 'Label']]
     print("Label distribution:\n", data['Label'].value_counts())
-    return df, data
-
+    return data
 
 # ===========================
 # Lemmatization Tokenizer
@@ -30,30 +33,28 @@ class LemmaTokenizer(object):
     def __call__(self, reviews):
         return [self.wordnetlemma.lemmatize(word) for word in word_tokenize(reviews)]
 
-
 # ===========================
 # Train-Test Split & Vectorization
 # ===========================
-def vectorize_bigram(data, min_df=10, max_features=500):
+def vectorize_unigram(data, min_df=5, max_features=500):
     train, test = train_test_split(data, test_size=0.3, random_state=42, shuffle=True)
     
     # Count Vectorizer
     countvect = CountVectorizer(analyzer="word", tokenizer=LemmaTokenizer(),
-                                ngram_range=(2, 2), min_df=min_df, max_features=max_features)
-    x_train_count = countvect.fit_transform(train['Reviews_clean']).toarray()
-    x_test_count = countvect.transform(test['Reviews_clean']).toarray()
+                                ngram_range=(1, 1), min_df=min_df, max_features=max_features)
+    x_train_count = countvect.fit_transform(train['Reviews']).toarray()
+    x_test_count = countvect.transform(test['Reviews']).toarray()
     
     # TFIDF Vectorizer
     tfidfvect = TfidfVectorizer(analyzer="word", tokenizer=LemmaTokenizer(),
-                                ngram_range=(2, 2), min_df=min_df, max_features=max_features)
-    x_train_tfidf = tfidfvect.fit_transform(train['Reviews_clean']).toarray()
-    x_test_tfidf = tfidfvect.transform(test['Reviews_clean']).toarray()
+                                ngram_range=(1, 1), min_df=min_df, max_features=max_features)
+    x_train_tfidf = tfidfvect.fit_transform(train['Reviews']).toarray()
+    x_test_tfidf = tfidfvect.transform(test['Reviews']).toarray()
     
     y_train = train['Label']
     y_test = test['Label']
     
     return train, test, countvect, tfidfvect, x_train_count, x_test_count, x_train_tfidf, x_test_tfidf, y_train, y_test
-
 
 # ===========================
 # Feature Importance using Logistic Regression
@@ -64,40 +65,25 @@ def feature_importance_lr(x_train, y_train, x_test, y_test, vectorizer, top_n=20
     score = lgr.score(x_test, y_test)
     
     importantfeature = PrettyTable(["Feature", "Score"])
-    for i, (feature, importance) in enumerate(zip(vectorizer.get_feature_names(), lgr.coef_[0])):
+    for i, (feature, importance) in enumerate(zip(vectorizer.get_feature_names_out(), lgr.coef_[0])):
         if i <= top_n:
             importantfeature.add_row([feature, importance])
     
     print(f"Accuracy: {score}")
     print(importantfeature)
 
-
-# ===========================
-# Display Specific Reviews
-# ===========================
-def display_reviews(df):
-    pd.options.display.max_colwidth = 1000
-    filtered_reviews = df[["Reviews","Ratings","Movies"]][
-        (df['Ratings'] >= 9) & (df['Reviews_clean'].str.contains("bad review"))
-    ].head(100)
-    print(filtered_reviews)
-
-
 # ===========================
 # MAIN EXECUTION
 # ===========================
 if __name__ == "__main__":
     # Preprocess data
-    df, data = preprocess_data(df)
+    data = preprocess_data(df)
     
-    # Vectorize with bigram CountVectorizer and TfidfVectorizer
-    train, test, countvect, tfidfvect, x_train_count, x_test_count, x_train_tfidf, x_test_tfidf, y_train, y_test = vectorize_bigram(data)
+    # Vectorize with unigram CountVectorizer and TfidfVectorizer
+    train, test, countvect, tfidfvect, x_train_count, x_test_count, x_train_tfidf, x_test_tfidf, y_train, y_test = vectorize_unigram(data)
     
     # Feature importance for CountVectorizer
     feature_importance_lr(x_train_count, y_train, x_test_count, y_test, countvect, top_n=200)
     
     # Feature importance for TFIDF Vectorizer
-    feature_importance_lr(x_train_tfidf, y_train, x_test_tfidf, y_test, tfidfvect, top_n=50)
-    
-    # Display specific reviews
-    display_reviews(df)
+    feature_importance_lr(x_train_tfidf, y_train, x_test_tfidf, y_test, tfidfvect, top_n=100)
